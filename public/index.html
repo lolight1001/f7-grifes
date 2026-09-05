@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F7 Grifes — Edição Limitada</title>
+<link rel="icon" type="image/png" href="/assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B0B09; --panel-dark:#17160F; --paper:#F7F4EB; --panel-light:#EEEAD9; --bone:#EDE9DA;
+    --graphite:#726E5F; --brass:#C9A15A; --brass-deep:#8A6A2E; --pop:#D6FF3F; --wine:#8C2A3A;
+    --line-dark:#2C2A20; --line-light:#DEDACB; --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Work Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+  img,svg{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;margin:0;padding:0;}
+  button{font-family:inherit;cursor:pointer;}
+  h1,h2,h3{font-family:'Fraunces',serif;margin:0;font-weight:700;line-height:1.02;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  :focus-visible{outline:2px solid var(--brass);outline-offset:3px;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass);display:inline-flex;align-items:center;gap:8px;}
+  .eyebrow::before{content:"";width:16px;height:1px;background:var(--brass);}
+
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.show{opacity:1;transform:none;}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none;}}
+
+  .grain{position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+  .marquee{background:var(--ink);color:var(--brass);overflow:hidden;border-bottom:1px solid var(--line-dark);}
+  .marquee-track{display:flex;width:max-content;animation:scroll 26s linear infinite;padding:9px 0;}
+  .marquee-track span{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;padding:0 22px;white-space:nowrap;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media (prefers-reduced-motion:reduce){.marquee-track{animation:none;overflow-x:auto;}}
+
+  header.nav{position:sticky;top:0;z-index:40;background:rgba(11,11,9,.18);backdrop-filter:blur(2px);border-bottom:1px solid transparent;transition:background .35s ease,border-color .35s ease,backdrop-filter .35s ease;}
+  header.nav.scrolled{background:rgba(11,11,9,.92);backdrop-filter:blur(10px);border-color:var(--line-dark);}
+  .nav-inner{max-width:1180px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;color:var(--bone);}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-wrap{position:relative;display:inline-flex;flex:none;}
+  .logo-tag{width:38px;height:38px;border-radius:50%;object-fit:cover;flex:none;box-shadow:0 2px 10px rgba(201,161,90,.35);}
+  .logo-badge{position:absolute;right:-2px;bottom:-2px;width:15px;height:15px;border-radius:50%;background:linear-gradient(135deg,#F1D9A0,var(--brass) 60%,#8A6A2E);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;}
+  .logo-badge svg{width:8px;height:8px;color:var(--ink);}
+  .logo-word{font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:22px;letter-spacing:.01em;color:var(--bone);}
+  .logo-word b{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;display:block;font-weight:500;color:var(--brass);margin-top:-2px;}
+  .nav-links{display:flex;gap:30px;}
+  .nav-links a{font-size:14px;font-weight:500;position:relative;padding:4px 0;color:var(--bone);}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1px;background:var(--brass);transition:width .2s ease;}
+  .nav-links a:hover::after{width:100%;}
+  .nav-icons{display:flex;align-items:center;gap:18px;color:var(--bone);}
+  .icon-btn{background:none;border:none;padding:4px;color:var(--bone);display:inline-flex;align-items:center;}
+  .cart-btn{position:relative;}
+  .cart-count{position:absolute;top:-6px;right:-8px;background:var(--pop);color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;min-width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+  .burger{display:none;background:none;border:none;color:var(--bone);}
+  @media (max-width:860px){
+    .nav-links{position:absolute;top:100%;left:0;right:0;background:var(--ink);flex-direction:column;gap:0;border-bottom:1px solid var(--line-dark);max-height:0;overflow:hidden;transition:max-height .25s ease;}
+    .nav-links.open{max-height:400px;}
+    .nav-links a{padding:14px 28px;border-top:1px solid var(--line-dark);}
+    .burger{display:block;}
+  }
+
+  .hero{--mx:50%;--my:30%;position:relative;overflow:hidden;background:radial-gradient(circle at 20% -10%,#1E1B10,var(--ink) 55%);color:var(--bone);padding:30px 0 96px;}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(560px circle at var(--mx) var(--my),rgba(201,161,90,.18),transparent 62%);pointer-events:none;transition:background .15s ease;}
+  .hero-inner{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:56px 28px 0;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;}
+  .edition-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line-dark);border-radius:999px;padding:6px 14px 6px 8px;margin-bottom:18px;}
+  .edition-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--pop);box-shadow:0 0 8px var(--pop);}
+  .edition-badge span{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--bone);}
+  .hero h1{font-size:clamp(42px,6.4vw,78px);margin:6px 0 22px;letter-spacing:-.01em;}
+  .hero h1 em{font-style:italic;background:linear-gradient(100deg,#F1D9A0,var(--brass) 45%,#8A6A2E);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .hero p{font-size:16px;color:#B9B5A5;max-width:44ch;line-height:1.65;margin:0 0 32px;}
+  .hero-ctas{display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
+  .btn{position:relative;overflow:hidden;background:linear-gradient(120deg,#E4C482,var(--brass) 55%,#B08B45);color:var(--ink);border:none;padding:15px 28px;border-radius:999px;font-size:14px;font-weight:700;letter-spacing:.03em;display:inline-block;}
+  .btn::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:rgba(255,255,255,.55);transform:skewX(-20deg);transition:left .5s ease;}
+  .btn:hover::before{left:130%;}
+  .btn-ghost{background:none;color:var(--bone);border:1px solid var(--line-dark);padding:14px 26px;border-radius:999px;font-size:14px;font-weight:600;}
+  .link-underline{font-size:14px;font-weight:600;border-bottom:1px solid var(--brass);padding-bottom:2px;color:var(--bone);}
+  .tag-stage{display:flex;justify-content:center;}
+  .tag-hang{transform-origin:top center;animation:sway 5.5s ease-in-out infinite;filter:drop-shadow(0 20px 34px rgba(0,0,0,.45));}
+  @keyframes sway{0%,100%{transform:rotate(-4deg);}50%{transform:rotate(4deg);}}
+  @media (prefers-reduced-motion:reduce){.tag-hang{animation:none;}}
+  .hero-logo-img{width:150px;height:150px;border-radius:50%;object-fit:cover;}
+
+  .trust{background:var(--paper);border-bottom:1px solid var(--line-light);}
+  .trust-inner{max-width:1180px;margin:0 auto;padding:28px 28px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .trust-item{display:flex;align-items:center;gap:12px;}
+  .trust-item svg{flex:none;color:var(--brass-deep);}
+  .trust-item span{font-size:13px;font-weight:600;line-height:1.35;}
+  @media (max-width:860px){.trust-inner{grid-template-columns:repeat(2,1fr);}}
+
+  .drop{background:linear-gradient(180deg,var(--ink),var(--panel-dark));color:var(--bone);padding:78px 0;border-bottom:1px solid var(--line-dark);}
+  .drop-inner{max-width:1180px;margin:0 auto;padding:0 28px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:26px;}
+  .drop h2{font-size:clamp(26px,3.6vw,40px);}
+  .drop h2 em{font-style:italic;color:var(--brass);}
+  .countdown{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+  .countdown div{background:var(--ink);border:1px solid var(--line-dark);border-radius:12px;padding:16px 20px;min-width:84px;}
+  .countdown strong{display:block;font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:600;color:var(--brass);}
+  .countdown span{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--graphite);}
+  .drop p{color:#B9B5A5;font-size:14px;max-width:46ch;margin:0;}
+
+  .section{padding:86px 0;}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:38px;flex-wrap:wrap;}
+  .section-head h2{font-size:clamp(28px,3.6vw,40px);margin-top:10px;}
+
+  .cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;}
+  .cat-card{background:var(--panel-light);border-radius:var(--radius);padding:24px 16px;text-align:center;transition:transform .2s ease,background .2s ease,color .2s ease;clip-path:polygon(0 0,100% 0,100% 100%,14px 100%,0 calc(100% - 14px));}
+  .cat-card:hover{transform:translateY(-4px);background:var(--ink);color:var(--bone);}
+  .cat-card svg{margin:0 auto 12px;color:var(--brass-deep);}
+  .cat-card:hover svg{color:var(--brass);}
+  .cat-card span{font-size:13px;font-weight:700;}
+  @media (max-width:900px){.cat-grid{grid-template-columns:repeat(3,1fr);}}
+  @media (max-width:520px){.cat-grid{grid-template-columns:repeat(2,1fr);}}
+
+  .lookbook{background:var(--panel-dark);color:var(--bone);}
+  .look-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .look-card{background:var(--ink);border:1px solid var(--line-dark);border-radius:var(--radius);overflow:hidden;transition:border-color .2s ease,transform .2s ease;}
+  .look-card:hover{border-color:var(--brass);transform:translateY(-4px);}
+  .look-num{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:var(--brass);padding:16px 18px 0;display:block;}
+  .look-media{aspect-ratio:3/4;margin:14px 18px 0;border-radius:10px;background:radial-gradient(circle at 30% 20%,#221F14,#0B0B09);display:flex;align-items:center;justify-content:center;}
+  .look-media svg{width:38%;height:38%;color:var(--brass);opacity:.85;}
+  .look-body{padding:16px 18px 22px;}
+  .look-body h3{font-family:'Fraunces',serif;font-style:italic;font-weight:600;font-size:21px;margin-bottom:8px;}
+  .look-body p{font-size:13px;color:#B9B5A5;line-height:1.6;margin:0 0 12px;}
+  .look-price{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--brass);}
+  @media (max-width:900px){.look-grid{grid-template-columns:1fr;}}
+
+  .pills{display:flex;gap:10px;flex-wrap:wrap;}
+  .pill{border:1px solid var(--line-light);background:none;border-radius:999px;padding:9px 18px;font-size:13px;font-weight:700;color:var(--graphite);}
+  .pill.active{background:var(--ink);border-color:var(--ink);color:var(--bone);}
+
+  .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;min-height:120px;}
+  .prod-empty{grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--graphite);font-size:14px;}
+  .prod-card{background:var(--paper);border:1px solid var(--line-light);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s ease,transform .2s ease,border-color .2s ease;}
+  .prod-card:hover{box-shadow:0 16px 34px rgba(20,20,15,.12);transform:translateY(-3px);border-color:var(--brass);}
+  .prod-media{aspect-ratio:4/5;position:relative;background:repeating-linear-gradient(135deg,transparent 0 18px,rgba(20,20,15,.05) 18px 19px),var(--panel-light);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .prod-media img{width:100%;height:100%;object-fit:cover;}
+  .prod-media svg{color:var(--ink);opacity:.28;width:44%;height:44%;}
+  .prod-off{position:absolute;top:12px;left:12px;background:var(--wine);color:var(--bone);font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 8px;border-radius:5px;}
+  .prod-hype{position:absolute;top:12px;right:12px;background:var(--ink);color:var(--brass);border:1px solid var(--brass-deep);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;padding:4px 7px;border-radius:5px;}
+  .prod-body{padding:16px 16px 18px;display:flex;flex-direction:column;gap:10px;flex:1;}
+  .prod-name{font-size:14.5px;font-weight:700;}
+  .prod-price{display:flex;align-items:baseline;gap:8px;font-family:'IBM Plex Mono',monospace;}
+  .prod-price .now{font-size:16px;font-weight:600;}
+  .prod-price .was{font-size:12px;color:var(--graphite);text-decoration:line-through;}
+  .prod-sizes{display:flex;gap:6px;flex-wrap:wrap;}
+  .prod-sizes button{font-family:'IBM Plex Mono',monospace;font-size:11px;border:1px solid var(--line-light);background:none;border-radius:5px;padding:3px 7px;color:var(--graphite);cursor:pointer;}
+  .prod-sizes button.selected{border-color:var(--ink);background:var(--ink);color:var(--bone);}
+  .prod-add{margin-top:auto;background:var(--ink);color:var(--bone);border:none;border-radius:8px;padding:11px;font-size:13px;font-weight:700;letter-spacing:.02em;transition:background .2s ease;}
+  .prod-add:hover{background:var(--brass-deep);}
+  .hidden{display:none !important;}
+  @media (max-width:980px){.prod-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.prod-grid{grid-template-columns:1fr;}}
+
+  .story{background:var(--ink);color:var(--bone);}
+  .story-inner{max-width:1180px;margin:0 auto;padding:96px 28px;display:grid;grid-template-columns:.8fr 1.2fr;gap:50px;align-items:center;}
+  .story blockquote{font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:clamp(28px,3.2vw,42px);margin:0;line-height:1.18;}
+  .story blockquote em{font-style:italic;background:linear-gradient(100deg,#F1D9A0,var(--brass) 50%,#8A6A2E);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .story p{color:#B9B5A5;font-size:15px;line-height:1.75;max-width:52ch;}
+  .story-num{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--brass);letter-spacing:.16em;margin-bottom:18px;display:block;}
+  @media (max-width:860px){.story-inner{grid-template-columns:1fr;}}
+
+  .founder{background:var(--paper);}
+  .founder-inner{max-width:1180px;margin:0 auto;padding:90px 28px;display:grid;grid-template-columns:.82fr 1.18fr;gap:50px;align-items:center;}
+  .founder-photo{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:3/4;background:var(--panel-light);box-shadow:0 20px 40px rgba(20,20,15,.18);}
+  .founder-photo img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.2) contrast(1.08) brightness(.98);}
+  .founder-tag{position:absolute;left:16px;bottom:16px;background:var(--ink);color:var(--bone);font-size:11px;letter-spacing:.08em;padding:8px 12px;border-radius:8px;border:1px solid var(--brass-deep);}
+  .founder-text h2{font-size:clamp(26px,3.4vw,38px);margin:10px 0 18px;}
+  .founder-text p{color:var(--graphite);font-size:15px;line-height:1.75;max-width:50ch;margin:0 0 12px;}
+  @media (max-width:860px){.founder-inner{grid-template-columns:1fr;}.founder-photo{max-width:340px;margin:0 auto;}}
+
+  .vip{background:var(--paper);}
+  .vip-inner{max-width:640px;margin:0 auto;padding:80px 28px;text-align:center;}
+  .vip h2{font-size:clamp(26px,3.2vw,34px);margin:14px 0 10px;}
+  .vip p{color:var(--graphite);font-size:14px;margin:0 0 26px;}
+  .vip-form{display:flex;gap:10px;max-width:420px;margin:0 auto;}
+  .vip-form input{flex:1;border:1px solid var(--line-light);background:#fff;border-radius:999px;padding:13px 18px;font-size:14px;font-family:inherit;}
+  .vip-msg{margin-top:14px;font-size:13px;font-family:'IBM Plex Mono',monospace;color:var(--brass-deep);min-height:16px;}
+  @media (max-width:520px){.vip-form{flex-direction:column;}}
+
+  footer{background:var(--ink);color:var(--bone);padding:64px 0 26px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px;padding-bottom:46px;}
+  .foot-brand p{font-size:13px;color:#B9B5A5;line-height:1.6;max-width:34ch;margin:14px 0 18px;}
+  .foot-social{display:flex;gap:12px;}
+  .foot-social a{width:34px;height:34px;border:1px solid var(--line-dark);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .foot-social a:hover{border-color:var(--brass);color:var(--brass);}
+  .foot-col h4{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--graphite);margin:0 0 16px;}
+  .foot-col li{margin-bottom:10px;font-size:14px;}
+  .foot-col li a:hover{color:var(--brass);}
+  .foot-bottom{border-top:1px solid var(--line-dark);padding-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;}
+  .foot-bottom p{font-size:12px;color:var(--graphite);margin:0;}
+  .pay-badges{display:flex;gap:8px;}
+  .pay-badges span{font-family:'IBM Plex Mono',monospace;font-size:10px;border:1px solid var(--line-dark);border-radius:5px;padding:5px 8px;color:var(--graphite);}
+  @media (max-width:860px){.foot-grid{grid-template-columns:1fr 1fr;}}
+  @media (max-width:520px){.foot-grid{grid-template-columns:1fr;}}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(120%);background:var(--ink);color:var(--bone);padding:13px 22px;border-radius:999px;font-size:13px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.35);transition:transform .3s ease;z-index:60;display:flex;align-items:center;gap:8px;border:1px solid var(--line-dark);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .toast.show{transform:translateX(-50%) translateY(0);}
+  .toast svg{color:var(--brass);flex:none;}
+
+  .whats-float{position:fixed;right:20px;bottom:20px;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(0,0,0,.3);z-index:50;transition:transform .2s ease;}
+  .whats-float:hover{transform:scale(1.08);}
+  .whats-float svg{width:28px;height:28px;color:#fff;}
+  @media (max-width:520px){.whats-float{right:16px;bottom:16px;width:52px;height:52px;}}
+  @media (max-width:520px){.toast{bottom:82px;max-width:calc(100% - 32px);}}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>✻ EDIÇÃO LIMITADA</span><span>✻ DROP 001 DISPONÍVEL AGORA</span><span>✻ FRETE GRÁTIS ACIMA DE R$300</span><span>✻ 5% OFF NO PIX</span><span>✻ SOMOS RARIDADE</span>
+    <span>✻ EDIÇÃO LIMITADA</span><span>✻ DROP 001 DISPONÍVEL AGORA</span><span>✻ FRETE GRÁTIS ACIMA DE R$300</span><span>✻ 5% OFF NO PIX</span><span>✻ SOMOS RARIDADE</span>
+  </div>
+</div>
+
+<header class="nav" id="siteNav">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-wrap">
+        <img class="logo-tag" src="/assets/logo.png" alt="F7 Grifes">
+        <span class="logo-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2"><polyline points="20 6 9 17 4 12"/></svg></span>
+      </span>
+      <span class="logo-word">F7<b>GRIFES</b></span>
+    </a>
+    <nav>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#novidades">Novidades</a></li>
+        <li><a href="#categorias">Categorias</a></li>
+        <li><a href="#lookbook">Lookbook</a></li>
+        <li><a href="#produtos">Produtos</a></li>
+        <li><a href="#fundador">Fundador</a></li>
+        <li><a href="#historia">A marca</a></li>
+      </ul>
+    </nav>
+    <div class="nav-icons">
+      <button class="icon-btn" aria-label="Buscar"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <button class="icon-btn" aria-label="Conta"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.6-4 5-6 8-6s6.4 2 8 6"/></svg></button>
+      <a class="icon-btn cart-btn" aria-label="Sacola" id="cartBtn" href="/carrinho.html"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="cart-count" id="cartCount">0</span></a>
+      <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="novidades">
+  <div class="hero-inner">
+    <div>
+      <div class="edition-badge"><span class="dot"></span><span>EDIÇÃO Nº 001/500 · 2026</span></div>
+      <h1>Isso aqui<br>vai virar <em>mídia.</em></h1>
+      <p>Streetwear de grife de verdade: peça desenhada, numerada e assinada por nós — do primeiro corte à última costura. Nada de estampa emprestada.</p>
+      <div class="hero-ctas">
+        <a href="#produtos" class="btn">Ver o drop</a>
+        <a href="#historia" class="link-underline">Conhecer a marca →</a>
+      </div>
+    </div>
+    <div class="tag-stage">
+      <svg class="tag-hang" width="260" height="360" viewBox="0 0 260 360" fill="none">
+        <line x1="130" y1="0" x2="130" y2="46" stroke="#726E5F" stroke-width="2"/>
+        <defs>
+          <linearGradient id="foil" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#F1D9A0"/><stop offset="55%" stop-color="#C9A15A"/><stop offset="100%" stop-color="#8A6A2E"/>
+          </linearGradient>
+          <clipPath id="roundLogo"><circle cx="130" cy="181" r="75"/></clipPath>
+        </defs>
+        <rect x="30" y="46" width="200" height="270" rx="20" fill="#0B0B09" stroke="url(#foil)" stroke-width="2"/>
+        <circle cx="130" cy="86" r="15" fill="#0B0B09" stroke="url(#foil)" stroke-width="3"/>
+        <image href="/assets/logo.png" x="55" y="106" width="150" height="150" clip-path="url(#roundLogo)" preserveAspectRatio="xMidYMid slice"/>
+        <g stroke="#3A3728" stroke-width="2">
+          <line x1="52" y1="272" x2="52" y2="292"/><line x1="60" y1="272" x2="60" y2="292"/><line x1="70" y1="272" x2="70" y2="292"/><line x1="76" y1="272" x2="76" y2="292"/>
+          <line x1="86" y1="272" x2="86" y2="292"/><line x1="96" y1="272" x2="96" y2="292"/><line x1="102" y1="272" x2="102" y2="292"/><line x1="112" y1="272" x2="112" y2="292"/>
+          <line x1="122" y1="272" x2="122" y2="292"/><line x1="130" y1="272" x2="130" y2="292"/><line x1="140" y1="272" x2="140" y2="292"/><line x1="148" y1="272" x2="148" y2="292"/>
+          <line x1="158" y1="272" x2="158" y2="292"/><line x1="166" y1="272" x2="166" y2="292"/><line x1="176" y1="272" x2="176" y2="292"/><line x1="186" y1="272" x2="186" y2="292"/>
+          <line x1="194" y1="272" x2="194" y2="292"/><line x1="204" y1="272" x2="204" y2="292"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="trust">
+  <div class="trust-inner">
+    <div class="trust-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg><span>Frete grátis acima<br>de R$300</span></div>
+    <div class="trust-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 7l9 5 9-5-9-5Z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg><span>5% off pagando<br>no Pix</span></div>
+    <div class="trust-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg><span>Troca grátis em<br>até 7 dias</span></div>
+    <div class="trust-item"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 5v6c0 5 3.4 8.7 8 11 4.6-2.3 8-6 8-11V5l-8-3Z"/></svg><span>Compra 100%<br>segura</span></div>
+  </div>
+</div>
+
+<section class="drop">
+  <div class="drop-inner reveal">
+    <span class="eyebrow">Próximo lançamento</span>
+    <h2>O próximo drop abre em <em>breve.</em></h2>
+    <div class="countdown mono" id="countdown">
+      <div><strong id="cd-d">00</strong><span>DIAS</span></div>
+      <div><strong id="cd-h">00</strong><span>HORAS</span></div>
+      <div><strong id="cd-m">00</strong><span>MIN</span></div>
+      <div><strong id="cd-s">00</strong><span>SEG</span></div>
+    </div>
+    <p>Entre na lista VIP lá embaixo pra ser avisado antes de todo mundo quando a contagem zerar.</p>
+  </div>
+</section>
+
+<section class="section" id="categorias">
+  <div class="wrap">
+    <div class="section-head reveal"><div><span class="eyebrow">Explorar</span><h2>Categorias</h2></div></div>
+    <div class="cat-grid">
+      <div class="cat-card"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 4 4 7v3h3v10h10V10h3V7l-4-3-2 2h-2L8 4Z"/></svg><span>Camisetas</span></div>
+      <div class="cat-card"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h10l1 6-2 12H8L6 9 7 3Z"/><path d="M6 9h12"/></svg><span>Calças &amp; Jeans</span></div>
+      <div class="cat-card"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3 5 6v3h3v12h8V9h3V6l-3-3-3 2-3-2Z"/></svg><span>Moletons &amp; Jaquetas</span></div>
+      <div class="cat-card"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 15c0-5 4-9 9-9s9 4 9 9"/><path d="M3 15h18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2Z"/></svg><span>Tênis</span></div>
+      <div class="cat-card"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 13a8 8 0 0 1 16 0"/><path d="M4 13h16v2a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-2Z"/><path d="M12 5v3"/></svg><span>Bonés</span></div>
+      <div class="cat-card"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.4"/></svg><span>Acessórios</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section lookbook" id="lookbook">
+  <div class="wrap">
+    <div class="section-head reveal"><div><span class="eyebrow">Editorial</span><h2>Lookbook — Drop 001</h2></div></div>
+    <div class="look-grid">
+      <div class="look-card reveal">
+        <span class="look-num mono">LOOK 01</span>
+        <div class="look-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 4 4 7v3h3v10h10V10h3V7l-4-3-2 2h-2L8 4Z"/></svg></div>
+        <div class="look-body"><h3>Oversized Signature</h3><p>Corte solto, gola reforçada e etiqueta bordada à mão. A peça que abre o drop.</p><span class="look-price">R$ 129,90</span></div>
+      </div>
+      <div class="look-card reveal">
+        <span class="look-num mono">LOOK 02</span>
+        <div class="look-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 3 5 6v3h3v12h8V9h3V6l-3-3-3 2-3-2Z"/></svg></div>
+        <div class="look-body"><h3>Boxy Etiqueta</h3><p>Moletom estruturado com forro felpado e capuz duplo costurado.</p><span class="look-price">R$ 219,90</span></div>
+      </div>
+      <div class="look-card reveal">
+        <span class="look-num mono">LOOK 03</span>
+        <div class="look-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 15c0-5 4-9 9-9s9 4 9 9"/><path d="M3 15h18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2Z"/></svg></div>
+        <div class="look-body"><h3>Street Runner</h3><p>Solado alto, cabedal técnico e detalhe metálico gravado com o nº do drop.</p><span class="look-price">R$ 349,90</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="produtos" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div><span class="eyebrow">Loja</span><h2>Mais vendidos</h2></div>
+      <div class="pills" id="filterPills">
+        <button class="pill active" data-filter="todos">Todos</button>
+        <button class="pill" data-filter="camisetas">Camisetas</button>
+        <button class="pill" data-filter="moletons">Moletons</button>
+        <button class="pill" data-filter="calcas">Calças</button>
+        <button class="pill" data-filter="tenis">Tênis</button>
+        <button class="pill" data-filter="acessorios">Acessórios</button>
+        <button class="pill" data-filter="kits">Kits</button>
+      </div>
+    </div>
+    <div class="prod-grid" id="prodGrid"><div class="prod-empty">Carregando produtos…</div></div>
+  </div>
+</section>
+
+<section class="story" id="historia">
+  <div class="story-inner reveal">
+    <div><span class="story-num">Nº 001 — A MARCA</span><blockquote>Uma boa peça<br>começa <em>na etiqueta.</em></blockquote></div>
+    <p>F7 Grifes nasceu da ideia de que identidade de marca não é estampa emprestada — é assinatura própria. Cada lançamento é desenhado, testado e costurado com o mesmo cuidado, do tecido ao acabamento, para carregar uma única etiqueta: a nossa.</p>
+  </div>
+</section>
+
+<section class="founder" id="fundador">
+  <div class="founder-inner reveal">
+    <div class="founder-photo">
+      <img src="/assets/founder.jpg" alt="Fundador da F7 Grifes">
+      <span class="founder-tag mono">FUNDADOR · F7 GRIFES</span>
+    </div>
+    <div class="founder-text">
+      <span class="eyebrow">Quem está por trás</span>
+      <h2>A cara da marca.</h2>
+      <p>Cada peça que sai daqui passa pela mão de quem também usa. F7 Grifes é feita por quem entende de rua, de corte e do que faz uma peça valer a etiqueta.</p>
+      <p>Sem estampa emprestada, sem intermediário — direto de quem escolhe cada lançamento pra vocês.</p>
+    </div>
+  </div>
+</section>
+
+<section class="vip">
+  <div class="vip-inner reveal">
+    <span class="eyebrow" style="justify-content:center;">Lista VIP</span>
+    <h2>Entre antes de todo mundo</h2>
+    <p>Drops, restocks e desconto exclusivo direto no seu e-mail — sem spam.</p>
+    <form class="vip-form" id="vipForm">
+      <input type="email" placeholder="seu@email.com" required aria-label="E-mail">
+      <button type="submit" class="btn">Quero entrar</button>
+    </form>
+    <p class="vip-msg" id="vipMsg"></p>
+  </div>
+</section>
+
+<footer id="contato">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo"><span class="logo-wrap"><img class="logo-tag" src="/assets/logo.png" alt="F7 Grifes"><span class="logo-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2"><polyline points="20 6 9 17 4 12"/></svg></span></span><span class="logo-word">F7<b>GRIFES</b></span></div>
+        <p>Streetwear autoral criado e enviado a partir do Brasil. Peças pensadas para durar mais que uma temporada.</p>
+        <div class="foot-social">
+          <a href="https://instagram.com/f7grifess1" target="_blank" rel="noopener" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          <a href="#" id="footWhats" target="_blank" rel="noopener" aria-label="WhatsApp"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 1 1-3.8-7.1L21 3l-1.2 3.9c.8 1.3 1.2 2.9 1.2 4.6Z"/><path d="M8 10c.5 2.5 2.5 4.5 5 5"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col"><h4>Navegue</h4><ul><li><a href="#novidades">Novidades</a></li><li><a href="#categorias">Categorias</a></li><li><a href="#lookbook">Lookbook</a></li><li><a href="#produtos">Produtos</a></li><li><a href="#fundador">Fundador</a></li></ul></div>
+      <div class="foot-col"><h4>Ajuda</h4><ul><li><a href="#">Trocas e devoluções</a></li><li><a href="#">Rastrear pedido</a></li><li><a href="#">Perguntas frequentes</a></li><li><a href="#" id="footContact" target="_blank" rel="noopener">Fale conosco</a></li></ul></div>
+      <div class="foot-col"><h4>Contato</h4><ul><li>contato@f7grifes.com.br</li><li>(11) 9 7099-9294</li><li>Seg–Sex, 9h–18h</li></ul></div>
+    </div>
+    <div class="foot-bottom"><p>© 2026 F7 Grifes. Todos os direitos reservados.</p><div class="pay-badges"><span>PIX</span><span>CARTÃO</span><span>BOLETO</span></div></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="20 6 9 17 4 12"/></svg><span id="toastMsg">Adicionado à sacola</span></div>
+
+<a class="whats-float" id="whatsFloat" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 1 1-3.8-7.1L21 3l-1.2 3.9c.8 1.3 1.2 2.9 1.2 4.6Z"/><path d="M8 10c.5 2.5 2.5 4.5 5 5"/></svg>
+</a>
+
+<script src="/cart.js"></script>
+<script>
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var siteNav = document.getElementById('siteNav');
+  window.addEventListener('scroll', function(){ siteNav.classList.toggle('scrolled', window.scrollY > 40); });
+
+  var burger = document.getElementById('burgerBtn');
+  var navLinks = document.getElementById('navLinks');
+  burger.addEventListener('click', function(){
+    var open = navLinks.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  navLinks.addEventListener('click', function(e){
+    if (e.target.tagName === 'A') { navLinks.classList.remove('open'); burger.setAttribute('aria-expanded','false'); }
+  });
+
+  var heroEl = document.querySelector('.hero');
+  if (heroEl && !reduceMotion) {
+    heroEl.addEventListener('mousemove', function(e){
+      var r = heroEl.getBoundingClientRect();
+      heroEl.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+      heroEl.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+    });
+  }
+
+  function observeReveal(el){
+    if ('IntersectionObserver' in window && !reduceMotion) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ if (en.isIntersecting) { en.target.classList.add('show'); io.unobserve(en.target); } });
+      }, { threshold: .15 });
+      io.observe(el);
+    } else {
+      el.classList.add('show');
+    }
+  }
+  document.querySelectorAll('.reveal').forEach(observeReveal);
+
+  var target = new Date(Date.now() + 7*24*60*60*1000); // provisório até a data real chegar do servidor
+  function tickCountdown(){
+    var diff = target - new Date();
+    if (diff <= 0) {
+      document.getElementById('countdown').innerHTML = '<div style="min-width:auto;padding:16px 24px;"><strong class="mono" style="font-size:18px;">DROP DISPONÍVEL</strong></div>';
+      clearInterval(cdTimer);
+      return;
+    }
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
+    document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+    document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+    document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
+  }
+  var cdTimer = setInterval(tickCountdown, 1000);
+  fetch('/api/settings').then(function(r){ return r.json(); }).then(function(s){
+    if (s.dropDate) target = new Date(s.dropDate);
+    tickCountdown();
+  }).catch(function(){ tickCountdown(); });
+
+  var CAT_ICONS = {
+    camisetas: '<path d="M8 4 4 7v3h3v10h10V10h3V7l-4-3-2 2h-2L8 4Z"/>',
+    moletons: '<path d="M8 3 5 6v3h3v12h8V9h3V6l-3-3-3 2-3-2Z"/>',
+    calcas: '<path d="M7 3h10l1 6-2 12H8L6 9 7 3Z"/><path d="M6 9h12"/>',
+    tenis: '<path d="M3 15c0-5 4-9 9-9s9 4 9 9"/><path d="M3 15h18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2Z"/>',
+    acessorios: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.4"/>',
+    kits: '<path d="M3 9 12 4l9 5-9 5-9-5Z"/><path d="M3 9v7l9 5 9-5V9"/><path d="M12 14v7"/>'
+  };
+  function catIcon(category){
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">' + (CAT_ICONS[category] || CAT_ICONS.camisetas) + '</svg>';
+  }
+
+  var pills = document.querySelectorAll('.pill');
+  var currentFilter = 'todos';
+  pills.forEach(function(pill){
+    pill.addEventListener('click', function(){
+      pills.forEach(function(p){ p.classList.remove('active'); });
+      pill.classList.add('active');
+      currentFilter = pill.dataset.filter;
+      applyFilter();
+    });
+  });
+
+  var allProducts = [];
+  var prodGrid = document.getElementById('prodGrid');
+
+  function money(n){ return 'R$ ' + Number(n).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+  function renderProducts(){
+    if (!allProducts.length) {
+      prodGrid.innerHTML = '<div class="prod-empty">Nenhum produto cadastrado ainda.</div>';
+      return;
+    }
+    prodGrid.innerHTML = allProducts.map(function(p){
+      var offBadge = '';
+      if (p.originalPrice && p.originalPrice > p.price) {
+        var pct = Math.round((1 - p.price / p.originalPrice) * 100);
+        offBadge = '<span class="prod-off">-' + pct + '%</span>';
+      }
+      var hypeBadge = p.badge ? '<span class="prod-hype">' + p.badge + '</span>' : '';
+      var media = p.image
+        ? '<img src="' + p.image + '" alt="' + p.name + '">'
+        : catIcon(p.category);
+      var wasPrice = (p.originalPrice && p.originalPrice > p.price) ? '<span class="was">' + money(p.originalPrice) + '</span>' : '';
+      var sizes = (p.sizes || []).map(function(s, i){ return '<button type="button" data-size="' + s + '" class="' + (i===0?'selected':'') + '">' + s + '</button>'; }).join('');
+      return '' +
+        '<div class="prod-card" data-cat="' + p.category + '" data-id="' + p.id + '">' +
+          '<div class="prod-media">' + offBadge + hypeBadge + media + '</div>' +
+          '<div class="prod-body">' +
+            '<div class="prod-name">' + p.name + '</div>' +
+            '<div class="prod-price"><span class="now">' + money(p.price) + '</span>' + wasPrice + '</div>' +
+            '<div class="prod-sizes">' + sizes + '</div>' +
+            '<button class="prod-add" type="button">Adicionar à sacola</button>' +
+          '</div>' +
+        '</div>';
+    }).join('');
+    applyFilter();
+  }
+
+  function applyFilter(){
+    document.querySelectorAll('.prod-card').forEach(function(c){
+      c.classList.toggle('hidden', currentFilter !== 'todos' && c.dataset.cat !== currentFilter);
+    });
+  }
+
+  function loadProducts(){
+    fetch('/api/products').then(function(r){ return r.json(); }).then(function(data){
+      allProducts = data;
+      renderProducts();
+    }).catch(function(){
+      prodGrid.innerHTML = '<div class="prod-empty">Não foi possível carregar os produtos. Confira se o servidor local está rodando.</div>';
+    });
+  }
+  loadProducts();
+  document.getElementById('whatsFloat').href = window.F7_WHATSAPP_LINK('Olá! Vim do site da F7 Grifes.');
+  document.getElementById('footWhats').href = window.F7_WHATSAPP_LINK('Olá! Vim do site da F7 Grifes.');
+  document.getElementById('footContact').href = window.F7_WHATSAPP_LINK('Olá! Preciso de ajuda com um pedido.');
+
+  var cartCount = document.getElementById('cartCount');
+  var toast = document.getElementById('toast');
+  var toastMsg = document.getElementById('toastMsg');
+  var toastTimer;
+
+  prodGrid.addEventListener('click', function(e){
+    var sizeBtn = e.target.closest('.prod-sizes button');
+    if (sizeBtn) {
+      sizeBtn.parentElement.querySelectorAll('button').forEach(function(b){ b.classList.remove('selected'); });
+      sizeBtn.classList.add('selected');
+      return;
+    }
+    var addBtn = e.target.closest('.prod-add');
+    if (!addBtn) return;
+    var card = addBtn.closest('.prod-card');
+    var id = card.dataset.id;
+    var product = allProducts.find(function(p){ return p.id === id; });
+    if (!product) return;
+    var sizeEl = card.querySelector('.prod-sizes button.selected');
+    var size = sizeEl ? sizeEl.dataset.size : '';
+
+    window.F7Cart.addToCart({
+      productId: product.id, name: product.name, price: product.price,
+      image: product.image || '', category: product.category, size: size, qty: 1
+    });
+
+    var shortName = product.name.length > 26 ? product.name.slice(0, 25) + '…' : product.name;
+    toastMsg.textContent = shortName + (size ? ' (' + size + ')' : '') + ' na sacola';
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 2200);
+  });
+
+  document.getElementById('vipForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    document.getElementById('vipMsg').textContent = 'Inscrição confirmada — bem-vindo(a) à lista F7.';
+    e.target.reset();
+  });
+</script>
+</body>
+</html>

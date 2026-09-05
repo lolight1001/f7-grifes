@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F7 Grifes — Painel Admin</title>
+<link rel="icon" type="image/png" href="/assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B0B09; --panel:#17160F; --paper:#F7F4EB; --panel-light:#EEEAD9;
+    --bone:#EDE9DA; --graphite:#726E5F; --brass:#C9A15A; --brass-deep:#8A6A2E;
+    --wine:#8C2A3A; --ok:#4E9A6A; --line:#2C2A20; --line-light:#DEDACB; --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Work Sans',sans-serif;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  button,input,select{font-family:inherit;}
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+
+  header{background:var(--ink);color:var(--bone);padding:16px 26px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;}
+  .brand img{width:32px;height:32px;border-radius:50%;object-fit:cover;}
+  .brand span{font-size:13px;letter-spacing:.06em;color:var(--brass);text-transform:uppercase;}
+  header a.back{font-size:13px;color:var(--bone);opacity:.75;text-decoration:none;}
+  header a.back:hover{opacity:1;}
+
+  .wrap{max-width:980px;margin:0 auto;padding:32px 24px 80px;}
+
+  /* login */
+  .login-card{max-width:360px;margin:80px auto;background:#fff;border:1px solid var(--line-light);border-radius:var(--radius);padding:30px;text-align:center;}
+  .login-card h1{font-size:20px;margin:0 0 6px;}
+  .login-card p{font-size:13px;color:var(--graphite);margin:0 0 20px;}
+  .login-card input{width:100%;padding:12px 14px;border:1px solid var(--line-light);border-radius:8px;font-size:14px;margin-bottom:12px;}
+  .login-card button{width:100%;padding:12px;border:none;border-radius:8px;background:var(--ink);color:var(--bone);font-weight:700;font-size:14px;}
+  .login-error{color:var(--wine);font-size:13px;margin-top:10px;min-height:16px;}
+
+  .hidden{display:none !important;}
+
+  .toolbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap;}
+  .toolbar h1{font-size:22px;margin:0;}
+  .toolbar p{margin:2px 0 0;font-size:13px;color:var(--graphite);}
+  .btn{background:var(--ink);color:var(--bone);border:none;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;}
+  .btn:hover{background:var(--brass-deep);}
+  .btn-ghost{background:none;border:1px solid var(--line-light);color:var(--ink);padding:11px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;}
+
+  .panel{background:#fff;border:1px solid var(--line-light);border-radius:var(--radius);padding:22px;margin-bottom:26px;}
+  .panel h2{font-size:15px;margin:0 0 16px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--graphite);margin-bottom:6px;}
+  .field input[type=text],.field input[type=number],.field select{width:100%;padding:10px 12px;border:1px solid var(--line-light);border-radius:8px;font-size:14px;}
+  .field-check{display:flex;align-items:center;gap:8px;font-size:13px;}
+  .img-preview{width:90px;height:90px;border-radius:8px;object-fit:cover;background:var(--panel-light);border:1px solid var(--line-light);}
+  .img-row{display:flex;gap:14px;align-items:center;}
+  .form-actions{display:flex;gap:10px;margin-top:6px;}
+  .msg{font-size:13px;margin-top:10px;min-height:16px;}
+  .msg.ok{color:var(--ok);}
+  .msg.err{color:var(--wine);}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--graphite);text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line-light);}
+  td{padding:10px;border-bottom:1px solid var(--line-light);vertical-align:middle;}
+  td.thumb img{width:44px;height:44px;border-radius:6px;object-fit:cover;background:var(--panel-light);}
+  td.thumb .ph{width:44px;height:44px;border-radius:6px;background:var(--panel-light);}
+  .row-actions{display:flex;gap:8px;}
+  .row-actions button{border:1px solid var(--line-light);background:none;padding:6px 10px;border-radius:6px;font-size:12px;cursor:pointer;}
+  .row-actions button:hover{border-color:var(--brass);}
+  .row-actions .danger:hover{border-color:var(--wine);color:var(--wine);}
+  .badge-off{opacity:.45;}
+  .tag-small{font-family:'IBM Plex Mono',monospace;font-size:10px;border:1px solid var(--line-light);border-radius:5px;padding:2px 6px;}
+
+  .tabs{display:flex;gap:8px;margin-bottom:24px;border-bottom:1px solid var(--line-light);}
+  .tab{background:none;border:none;padding:10px 4px;margin-right:20px;font-size:14px;font-weight:700;color:var(--graphite);cursor:pointer;border-bottom:2px solid transparent;display:flex;align-items:center;gap:8px;}
+  .tab.active{color:var(--ink);border-bottom-color:var(--brass);}
+  .tab-badge{background:var(--wine);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:10px;border-radius:999px;padding:1px 7px;}
+
+  .order-card{border:1px solid var(--line-light);border-radius:10px;padding:16px;margin-bottom:14px;}
+  .order-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .order-id{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:13px;}
+  .order-date{font-size:12px;color:var(--graphite);}
+  .order-status select{border:1px solid var(--line-light);border-radius:6px;padding:5px 8px;font-size:12px;font-weight:600;}
+  .order-customer{font-size:13px;margin-bottom:10px;line-height:1.6;}
+  .order-customer b{font-weight:700;}
+  .order-items{font-size:13px;border-top:1px solid var(--line-light);padding-top:10px;}
+  .order-item-row{display:flex;justify-content:space-between;padding:3px 0;color:var(--graphite);}
+  .order-total{font-weight:700;border-top:1px solid var(--line-light);padding-top:8px;margin-top:8px;display:flex;justify-content:space-between;font-size:14px;}
+  .empty-note{color:var(--graphite);font-size:13px;padding:10px 0;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand"><img src="/assets/logo.png" alt=""><span>F7 Grifes · Admin</span></div>
+  <a class="back" href="/">← Ver loja</a>
+</header>
+
+<div id="loginView" class="wrap">
+  <div class="login-card">
+    <h1>Painel administrativo</h1>
+    <p>Acesso restrito — só funciona neste computador.</p>
+    <input type="password" id="loginPassword" placeholder="Senha do admin" autocomplete="current-password">
+    <button class="btn" id="loginBtn" style="width:100%;">Entrar</button>
+    <p class="login-error" id="loginError"></p>
+  </div>
+</div>
+
+<div id="adminView" class="wrap hidden">
+  <div class="tabs">
+    <button class="tab active" data-tab="products">Produtos</button>
+    <button class="tab" data-tab="orders">Pedidos <span id="ordersBadge" class="tab-badge hidden">0</span></button>
+  </div>
+
+  <div id="productsTab">
+  <div class="toolbar">
+    <div>
+      <h1>Produtos</h1>
+      <p>Adicione, edite ou oculte itens da loja.</p>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn" id="newProductBtn">+ Novo produto</button>
+      <button class="btn-ghost" id="logoutBtn">Sair</button>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="formPanel">
+    <h2 id="formTitle">Novo produto</h2>
+    <form id="productForm">
+      <input type="hidden" id="f_id">
+      <div class="grid2">
+        <div class="field">
+          <label>Nome do produto</label>
+          <input type="text" id="f_name" required maxlength="120">
+        </div>
+        <div class="field">
+          <label>Categoria</label>
+          <select id="f_category">
+            <option value="camisetas">Camisetas</option>
+            <option value="moletons">Moletons &amp; Jaquetas</option>
+            <option value="calcas">Calças &amp; Jeans</option>
+            <option value="tenis">Tênis</option>
+            <option value="acessorios">Acessórios</option>
+            <option value="kits">Kits</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Preço atual (R$)</label>
+          <input type="number" id="f_price" min="0" step="0.01" required>
+        </div>
+        <div class="field">
+          <label>Preço original (opcional, pra mostrar desconto)</label>
+          <input type="number" id="f_originalPrice" min="0" step="0.01">
+        </div>
+        <div class="field">
+          <label>Tamanhos (separados por vírgula)</label>
+          <input type="text" id="f_sizes" placeholder="P, M, G, GG">
+        </div>
+        <div class="field">
+          <label>Selo</label>
+          <select id="f_badge">
+            <option value="">Nenhum</option>
+            <option value="NOVO">NOVO</option>
+            <option value="EDIÇÃO LIMITADA">EDIÇÃO LIMITADA</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Foto do produto</label>
+        <div class="img-row">
+          <img class="img-preview" id="f_imgPreview" alt="">
+          <input type="file" id="f_imageFile" accept="image/png,image/jpeg,image/webp,image/gif">
+        </div>
+      </div>
+      <div class="field field-check">
+        <input type="checkbox" id="f_visible" checked>
+        <label for="f_visible" style="margin:0;">Visível na loja</label>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn" id="saveBtn">Salvar produto</button>
+        <button type="button" class="btn-ghost" id="cancelFormBtn">Cancelar</button>
+      </div>
+      <p class="msg" id="formMsg"></p>
+    </form>
+  </div>
+
+  <div class="panel">
+    <h2>Catálogo (<span id="countLabel">0</span> itens)</h2>
+    <table>
+      <thead>
+        <tr><th></th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Visível</th><th></th></tr>
+      </thead>
+      <tbody id="prodTableBody"></tbody>
+    </table>
+  </div>
+  </div>
+
+  <div id="ordersTab" class="hidden">
+    <div class="toolbar">
+      <div>
+        <h1>Pedidos</h1>
+        <p>Pedidos enviados pelos clientes pela sacola do site.</p>
+      </div>
+      <button class="btn-ghost" id="refreshOrdersBtn">Atualizar</button>
+    </div>
+    <div class="panel" id="ordersPanel">
+      <div id="ordersList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var TOKEN_KEY = 'f7_admin_token';
+  var loginView = document.getElementById('loginView');
+  var adminView = document.getElementById('adminView');
+  var formPanel = document.getElementById('formPanel');
+  var CATEGORY_LABELS = {
+    camisetas: 'Camisetas', moletons: 'Moletons & Jaquetas', calcas: 'Calças & Jeans',
+    tenis: 'Tênis', acessorios: 'Acessórios', kits: 'Kits'
+  };
+
+  function getToken(){ return localStorage.getItem(TOKEN_KEY) || ''; }
+  function setToken(t){ localStorage.setItem(TOKEN_KEY, t); }
+  function clearToken(){ localStorage.removeItem(TOKEN_KEY); }
+
+  function api(path, opts){
+    opts = opts || {};
+    opts.headers = Object.assign({}, opts.headers, { 'x-admin-token': getToken() });
+    return fetch(path, opts).then(function(r){
+      if (r.status === 401) {
+        clearToken();
+        showLogin('Sessão expirada. Entre novamente.');
+        throw new Error('unauthorized');
+      }
+      return r.json().then(function(data){
+        if (!r.ok) throw new Error(data.error || 'Erro');
+        return data;
+      });
+    });
+  }
+
+  function showLogin(err){
+    loginView.classList.remove('hidden');
+    adminView.classList.add('hidden');
+    document.getElementById('loginError').textContent = err || '';
+  }
+  function showAdmin(){
+    loginView.classList.add('hidden');
+    adminView.classList.remove('hidden');
+    loadProducts();
+  }
+
+  document.getElementById('loginBtn').addEventListener('click', doLogin);
+  document.getElementById('loginPassword').addEventListener('keydown', function(e){ if (e.key === 'Enter') doLogin(); });
+  function doLogin(){
+    var pass = document.getElementById('loginPassword').value;
+    fetch('/api/admin/login', {
+      method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ password: pass })
+    }).then(function(r){ return r.json().then(function(d){ return {status:r.status, data:d}; }); })
+      .then(function(res){
+        if (res.status === 200) { setToken(pass); showAdmin(); }
+        else { document.getElementById('loginError').textContent = res.data.error || 'Senha incorreta'; }
+      })
+      .catch(function(){ document.getElementById('loginError').textContent = 'Não foi possível conectar ao servidor.'; });
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', function(){
+    clearToken();
+    showLogin();
+  });
+
+  // ---- form produto ----
+  var form = document.getElementById('productForm');
+  var editingId = null;
+  var pendingImageDataUrl = null;
+
+  document.getElementById('newProductBtn').addEventListener('click', function(){ openForm(); });
+  document.getElementById('cancelFormBtn').addEventListener('click', function(){ closeForm(); });
+
+  function openForm(product){
+    editingId = product ? product.id : null;
+    pendingImageDataUrl = null;
+    document.getElementById('formTitle').textContent = product ? 'Editar produto' : 'Novo produto';
+    document.getElementById('f_id').value = product ? product.id : '';
+    document.getElementById('f_name').value = product ? product.name : '';
+    document.getElementById('f_category').value = product ? product.category : 'camisetas';
+    document.getElementById('f_price').value = product ? product.price : '';
+    document.getElementById('f_originalPrice').value = (product && product.originalPrice) ? product.originalPrice : '';
+    document.getElementById('f_sizes').value = product && product.sizes ? product.sizes.join(', ') : '';
+    document.getElementById('f_badge').value = product ? (product.badge || '') : '';
+    document.getElementById('f_visible').checked = product ? product.visible !== false : true;
+    document.getElementById('f_imageFile').value = '';
+    var preview = document.getElementById('f_imgPreview');
+    preview.src = product && product.image ? product.image : '';
+    preview.style.visibility = (product && product.image) ? 'visible' : 'hidden';
+    document.getElementById('formMsg').textContent = '';
+    formPanel.classList.remove('hidden');
+    formPanel.scrollIntoView({ behavior: reduceMotionOK() ? 'auto' : 'smooth', block: 'start' });
+  }
+  function closeForm(){
+    formPanel.classList.add('hidden');
+    form.reset();
+    editingId = null;
+    pendingImageDataUrl = null;
+  }
+  function reduceMotionOK(){ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  document.getElementById('f_imageFile').addEventListener('change', function(e){
+    var file = e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      pendingImageDataUrl = reader.result;
+      var preview = document.getElementById('f_imgPreview');
+      preview.src = reader.result;
+      preview.style.visibility = 'visible';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var msg = document.getElementById('formMsg');
+    msg.textContent = 'Salvando...';
+    msg.className = 'msg';
+
+    var payload = {
+      name: document.getElementById('f_name').value.trim(),
+      category: document.getElementById('f_category').value,
+      price: parseFloat(document.getElementById('f_price').value),
+      originalPrice: document.getElementById('f_originalPrice').value ? parseFloat(document.getElementById('f_originalPrice').value) : null,
+      sizes: document.getElementById('f_sizes').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean),
+      badge: document.getElementById('f_badge').value,
+      visible: document.getElementById('f_visible').checked
+    };
+
+    var uploadStep = pendingImageDataUrl
+      ? api('/api/admin/upload', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ dataUrl: pendingImageDataUrl }) }).then(function(res){ payload.image = res.url; })
+      : Promise.resolve();
+
+    uploadStep.then(function(){
+      var call = editingId
+        ? api('/api/admin/products/' + editingId, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) })
+        : api('/api/admin/products', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      return call;
+    }).then(function(){
+      msg.textContent = 'Produto salvo.';
+      msg.className = 'msg ok';
+      loadProducts();
+      setTimeout(closeForm, 500);
+    }).catch(function(err){
+      msg.textContent = err.message || 'Erro ao salvar.';
+      msg.className = 'msg err';
+    });
+  });
+
+  // ---- tabela ----
+  function loadProducts(){
+    api('/api/admin/products').then(function(list){
+      document.getElementById('countLabel').textContent = list.length;
+      var tbody = document.getElementById('prodTableBody');
+      tbody.innerHTML = list.map(function(p){
+        var thumb = p.image ? '<img src="' + p.image + '">' : '<div class="ph"></div>';
+        return '' +
+          '<tr class="' + (p.visible === false ? 'badge-off' : '') + '">' +
+            '<td class="thumb">' + thumb + '</td>' +
+            '<td>' + p.name + (p.badge ? ' <span class="tag-small">' + p.badge + '</span>' : '') + '</td>' +
+            '<td>' + (CATEGORY_LABELS[p.category] || p.category) + '</td>' +
+            '<td class="mono">R$ ' + Number(p.price).toLocaleString('pt-BR', {minimumFractionDigits:2}) + '</td>' +
+            '<td>' + (p.visible === false ? 'Oculto' : 'Sim') + '</td>' +
+            '<td><div class="row-actions">' +
+              '<button data-action="edit" data-id="' + p.id + '">Editar</button>' +
+              '<button data-action="toggle" data-id="' + p.id + '">' + (p.visible === false ? 'Mostrar' : 'Ocultar') + '</button>' +
+              '<button data-action="delete" data-id="' + p.id + '" class="danger">Excluir</button>' +
+            '</div></td>' +
+          '</tr>';
+      }).join('');
+      window.__products = list;
+    }).catch(function(){});
+  }
+
+  document.getElementById('prodTableBody').addEventListener('click', function(e){
+    var btn = e.target.closest('button');
+    if (!btn) return;
+    var id = btn.dataset.id;
+    var product = (window.__products || []).find(function(p){ return p.id === id; });
+    if (btn.dataset.action === 'edit') { openForm(product); }
+    if (btn.dataset.action === 'toggle') {
+      api('/api/admin/products/' + id, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ visible: !(product.visible !== false) }) })
+        .then(loadProducts);
+    }
+    if (btn.dataset.action === 'delete') {
+      if (confirm('Excluir "' + product.name + '"? Essa ação não pode ser desfeita.')) {
+        api('/api/admin/products/' + id, { method:'DELETE' }).then(loadProducts);
+      }
+    }
+  });
+
+  // ---- boot ----
+  if (getToken()) { showAdmin(); } else { showLogin(); }
+
+  // ---- tabs ----
+  var ORDER_STATUS_LABELS = { novo: 'Novo', confirmado: 'Confirmado', enviado: 'Enviado', cancelado: 'Cancelado' };
+  document.querySelectorAll('.tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+      tab.classList.add('active');
+      var isOrders = tab.dataset.tab === 'orders';
+      document.getElementById('productsTab').classList.toggle('hidden', isOrders);
+      document.getElementById('ordersTab').classList.toggle('hidden', !isOrders);
+      if (isOrders) loadOrders();
+    });
+  });
+  document.getElementById('refreshOrdersBtn').addEventListener('click', loadOrders);
+
+  function money(n){ return 'R$ ' + Number(n).toLocaleString('pt-BR', {minimumFractionDigits:2}); }
+
+  function loadOrders(){
+    api('/api/admin/orders').then(function(list){
+      var newCount = list.filter(function(o){ return o.status === 'novo'; }).length;
+      var badge = document.getElementById('ordersBadge');
+      badge.textContent = newCount;
+      badge.classList.toggle('hidden', newCount === 0);
+
+      var container = document.getElementById('ordersList');
+      if (!list.length) {
+        container.innerHTML = '<p class="empty-note">Nenhum pedido ainda.</p>';
+        return;
+      }
+      container.innerHTML = list.map(function(o){
+        var date = new Date(o.createdAt).toLocaleString('pt-BR');
+        var items = o.items.map(function(it){
+          return '<div class="order-item-row"><span>' + it.qty + 'x ' + it.name + (it.size ? ' (' + it.size + ')' : '') + '</span><span class="mono">' + money(it.price * it.qty) + '</span></div>';
+        }).join('');
+        var addr = [o.customer.address, o.customer.city].filter(Boolean).join(' — ');
+        return '' +
+          '<div class="order-card">' +
+            '<div class="order-head">' +
+              '<div><span class="order-id">#' + o.id.slice(0,8) + '</span> <span class="order-date">' + date + '</span></div>' +
+              '<div class="order-status"><select data-id="' + o.id + '">' +
+                Object.keys(ORDER_STATUS_LABELS).map(function(s){ return '<option value="' + s + '"' + (s === o.status ? ' selected' : '') + '>' + ORDER_STATUS_LABELS[s] + '</option>'; }).join('') +
+              '</select></div>' +
+            '</div>' +
+            '<div class="order-customer">' +
+              '<b>' + o.customer.name + '</b> · ' + o.customer.phone +
+              (addr ? '<br>' + addr : '') +
+              (o.customer.note ? '<br><i>Obs: ' + o.customer.note + '</i>' : '') +
+            '</div>' +
+            '<div class="order-items">' + items + '</div>' +
+            '<div class="order-total"><span>Total</span><span class="mono">' + money(o.total) + '</span></div>' +
+          '</div>';
+      }).join('');
+
+      container.querySelectorAll('select[data-id]').forEach(function(sel){
+        sel.addEventListener('change', function(){
+          api('/api/admin/orders/' + sel.dataset.id, { method:'PUT', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ status: sel.value }) })
+            .then(loadOrders);
+        });
+      });
+    }).catch(function(){});
+  }
+</script>
+</body>
+</html>

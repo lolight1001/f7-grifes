@@ -1,0 +1,130 @@
+[
+  {
+    "id": "seed-1",
+    "name": "Camiseta Oversized Signature",
+    "category": "camisetas",
+    "price": 129.9,
+    "originalPrice": 159.9,
+    "sizes": [
+      "P",
+      "M",
+      "G",
+      "GG"
+    ],
+    "badge": "",
+    "image": "",
+    "visible": true,
+    "createdAt": 1
+  },
+  {
+    "id": "seed-2",
+    "name": "Moletom Boxy Etiqueta",
+    "category": "moletons",
+    "price": 219.9,
+    "originalPrice": null,
+    "sizes": [
+      "M",
+      "G",
+      "GG"
+    ],
+    "badge": "EDIÇÃO LIMITADA",
+    "image": "",
+    "visible": true,
+    "createdAt": 2
+  },
+  {
+    "id": "seed-3",
+    "name": "Calça Cargo Wide",
+    "category": "calcas",
+    "price": 189.9,
+    "originalPrice": 229.9,
+    "sizes": [
+      "38",
+      "40",
+      "42",
+      "44"
+    ],
+    "badge": "",
+    "image": "",
+    "visible": true,
+    "createdAt": 3
+  },
+  {
+    "id": "seed-4",
+    "name": "Tênis Street Runner",
+    "category": "tenis",
+    "price": 349.9,
+    "originalPrice": 429.9,
+    "sizes": [
+      "39",
+      "40",
+      "41",
+      "42"
+    ],
+    "badge": "",
+    "image": "",
+    "visible": true,
+    "createdAt": 4
+  },
+  {
+    "id": "seed-5",
+    "name": "Boné Aba Reta F7",
+    "category": "acessorios",
+    "price": 89.9,
+    "originalPrice": null,
+    "sizes": [
+      "Único"
+    ],
+    "badge": "NOVO",
+    "image": "",
+    "visible": true,
+    "createdAt": 5
+  },
+  {
+    "id": "seed-6",
+    "name": "Jaqueta Corta-Vento Tag",
+    "category": "moletons",
+    "price": 249.9,
+    "originalPrice": null,
+    "sizes": [
+      "P",
+      "M",
+      "G"
+    ],
+    "badge": "",
+    "image": "",
+    "visible": true,
+    "createdAt": 6
+  },
+  {
+    "id": "seed-7",
+    "name": "Camiseta Básica Etiqueta Dourada",
+    "category": "camisetas",
+    "price": 99.9,
+    "originalPrice": null,
+    "sizes": [
+      "P",
+      "M",
+      "G",
+      "GG"
+    ],
+    "badge": "",
+    "image": "",
+    "visible": true,
+    "createdAt": 7
+  },
+  {
+    "id": "seed-8",
+    "name": "Cinto Reversível F7",
+    "category": "acessorios",
+    "price": 74.9,
+    "originalPrice": 89.9,
+    "sizes": [
+      "Único"
+    ],
+    "badge": "",
+    "image": "",
+    "visible": true,
+    "createdAt": 8
+  }
+]

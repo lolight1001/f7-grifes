@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sacola — F7 Grifes</title>
+<link rel="icon" type="image/png" href="/assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B0B09; --panel-dark:#17160F; --paper:#F7F4EB; --panel-light:#EEEAD9; --bone:#EDE9DA;
+    --graphite:#726E5F; --brass:#C9A15A; --brass-deep:#8A6A2E; --pop:#D6FF3F; --wine:#8C2A3A; --ok:#4E9A6A;
+    --line-dark:#2C2A20; --line-light:#DEDACB; --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Work Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+  img,svg{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+  button,input,textarea{font-family:inherit;}
+  h1,h2{font-family:'Fraunces',serif;margin:0;font-weight:700;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  :focus-visible{outline:2px solid var(--brass);outline-offset:3px;}
+  .hidden{display:none !important;}
+
+  header{background:var(--ink);color:var(--bone);}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  .logo{display:flex;align-items:center;gap:10px;}
+  .logo-wrap{position:relative;display:inline-flex;flex:none;}
+  .logo-tag{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;}
+  .logo-badge{position:absolute;right:-2px;bottom:-2px;width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#F1D9A0,var(--brass) 60%,#8A6A2E);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;}
+  .logo-badge svg{width:7px;height:7px;color:var(--ink);}
+  .logo-word{font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:19px;}
+  .logo-word b{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;display:block;font-weight:500;color:var(--brass);margin-top:-2px;}
+  .continue-link{font-size:13px;font-weight:600;color:var(--bone);opacity:.85;}
+  .continue-link:hover{opacity:1;color:var(--brass);}
+
+  .wrap{max-width:1100px;margin:0 auto;padding:44px 24px 100px;}
+  .page-title{font-size:clamp(26px,3.6vw,36px);margin-bottom:6px;}
+  .page-sub{color:var(--graphite);font-size:14px;margin:0 0 34px;}
+
+  .layout{display:grid;grid-template-columns:1.5fr 1fr;gap:32px;align-items:start;}
+  @media (max-width:860px){.layout{grid-template-columns:1fr;}}
+
+  .card{background:#fff;border:1px solid var(--line-light);border-radius:var(--radius);padding:22px;}
+
+  .empty-state{text-align:center;padding:60px 20px;}
+  .empty-state svg{margin:0 auto 18px;color:var(--brass-deep);}
+  .empty-state p{color:var(--graphite);font-size:14px;margin:0 0 20px;}
+  .btn{position:relative;overflow:hidden;background:linear-gradient(120deg,#E4C482,var(--brass) 55%,#B08B45);color:var(--ink);border:none;padding:13px 24px;border-radius:999px;font-size:14px;font-weight:700;cursor:pointer;display:inline-block;text-align:center;}
+  .btn::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:rgba(255,255,255,.55);transform:skewX(-20deg);transition:left .5s ease;}
+  .btn:hover::before{left:130%;}
+  .btn:disabled{opacity:.55;cursor:not-allowed;}
+  .btn-ghost{background:none;border:1px solid var(--line-light);color:var(--ink);padding:13px 24px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;}
+
+  .cart-line{display:grid;grid-template-columns:64px 1fr auto;gap:14px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line-light);}
+  .cart-line:last-child{border-bottom:none;}
+  .line-media{width:64px;height:64px;border-radius:8px;background:var(--panel-light);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .line-media img{width:100%;height:100%;object-fit:cover;}
+  .line-media svg{width:50%;height:50%;color:var(--ink);opacity:.3;}
+  .line-name{font-weight:700;font-size:14px;margin-bottom:3px;}
+  .line-meta{font-size:12px;color:var(--graphite);margin-bottom:8px;}
+  .line-controls{display:flex;align-items:center;gap:10px;}
+  .qty-stepper{display:inline-flex;align-items:center;border:1px solid var(--line-light);border-radius:8px;}
+  .qty-stepper button{background:none;border:none;width:28px;height:28px;font-size:15px;cursor:pointer;color:var(--ink);}
+  .qty-stepper span{font-family:'IBM Plex Mono',monospace;font-size:13px;min-width:22px;text-align:center;display:inline-block;}
+  .line-remove{font-size:12px;color:var(--wine);background:none;border:none;cursor:pointer;text-decoration:underline;}
+  .line-total{text-align:right;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:14px;white-space:nowrap;}
+
+  .summary-row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:10px;}
+  .summary-row.total{font-size:17px;font-weight:700;border-top:1px solid var(--line-light);padding-top:14px;margin-top:6px;}
+  .summary-row .mono{font-family:'IBM Plex Mono',monospace;}
+
+  .ship-bar{background:var(--panel-light);border-radius:999px;height:6px;overflow:hidden;margin:14px 0 8px;}
+  .ship-bar-fill{background:linear-gradient(90deg,var(--brass-deep),var(--brass));height:100%;transition:width .3s ease;}
+  .ship-note{font-size:12px;color:var(--graphite);margin:0 0 18px;}
+  .ship-note.ok{color:var(--ok);font-weight:600;}
+
+  .field{margin-bottom:13px;}
+  .field label{display:block;font-size:12px;font-weight:600;color:var(--graphite);margin-bottom:5px;}
+  .field input,.field textarea{width:100%;padding:10px 12px;border:1px solid var(--line-light);border-radius:8px;font-size:14px;}
+  .field textarea{resize:vertical;min-height:60px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+  .checkout-msg{font-size:13px;margin-top:10px;min-height:16px;}
+  .checkout-msg.err{color:var(--wine);}
+
+  .success-panel{text-align:center;padding:20px 6px;}
+  .success-panel .dot{width:52px;height:52px;border-radius:50%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+  .success-panel h2{font-size:20px;margin-bottom:8px;}
+  .success-panel p{color:var(--graphite);font-size:14px;margin:0 0 22px;line-height:1.6;}
+  .success-panel .order-id{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--brass-deep);margin-bottom:18px;}
+  .success-actions{display:flex;flex-direction:column;gap:10px;}
+  .btn-whats{background:#25D366;color:#fff;}
+  .btn-whats:hover{background:#1DA851;}
+
+  .whats-float{position:fixed;right:20px;bottom:20px;width:56px;height:56px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(0,0,0,.3);z-index:50;transition:transform .2s ease;}
+  .whats-float:hover{transform:scale(1.08);}
+  .whats-float svg{width:28px;height:28px;color:#fff;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <span class="logo-wrap">
+        <img class="logo-tag" src="/assets/logo.png" alt="F7 Grifes">
+        <span class="logo-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2"><polyline points="20 6 9 17 4 12"/></svg></span>
+      </span>
+      <span class="logo-word">F7<b>GRIFES</b></span>
+    </a>
+    <a href="/#produtos" class="continue-link">← Continuar comprando</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1 class="page-title">Sua sacola</h1>
+  <p class="page-sub">Revise os itens, escolha como quer receber e finalize com a gente pelo WhatsApp.</p>
+
+  <div id="emptyState" class="card empty-state hidden">
+    <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+    <p>Sua sacola está vazia.</p>
+    <a href="/#produtos" class="btn">Ver produtos</a>
+  </div>
+
+  <div id="cartLayout" class="layout hidden">
+    <div class="card" id="linesCard">
+      <div id="linesList"></div>
+    </div>
+
+    <div>
+      <div class="card" id="summaryCard">
+        <div class="summary-row"><span>Subtotal</span><span class="mono" id="sumSubtotal">R$ 0,00</span></div>
+        <div class="ship-bar"><div class="ship-bar-fill" id="shipFill" style="width:0%"></div></div>
+        <p class="ship-note" id="shipNote"></p>
+        <div class="summary-row total"><span>Total</span><span class="mono" id="sumTotal">R$ 0,00</span></div>
+      </div>
+
+      <div class="card" id="checkoutCard" style="margin-top:18px;">
+        <h2 style="font-size:16px;margin-bottom:16px;">Seus dados</h2>
+        <form id="checkoutForm">
+          <div class="field"><label>Nome completo *</label><input type="text" id="c_name" required></div>
+          <div class="field"><label>WhatsApp / telefone *</label><input type="text" id="c_phone" placeholder="(00) 00000-0000" required></div>
+          <div class="field-row">
+            <div class="field"><label>Cidade</label><input type="text" id="c_city"></div>
+            <div class="field"><label>Endereço</label><input type="text" id="c_address"></div>
+          </div>
+          <div class="field"><label>Observação (opcional)</label><textarea id="c_note" placeholder="Cor, urgência, referência de entrega..."></textarea></div>
+          <button type="submit" class="btn" id="submitBtn" style="width:100%;">Finalizar pedido</button>
+          <p class="checkout-msg" id="checkoutMsg"></p>
+        </form>
+
+        <div id="successPanel" class="success-panel hidden">
+          <div class="dot"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <h2>Pedido recebido!</h2>
+          <p class="order-id" id="orderIdLabel"></p>
+          <p>Agora é só confirmar o pagamento e a entrega com a gente pelo WhatsApp — é rapidinho.</p>
+          <div class="success-actions">
+            <a href="#" class="btn btn-whats" id="whatsBtn" target="_blank" rel="noopener">Finalizar no WhatsApp</a>
+            <a href="/" class="btn-ghost" style="text-align:center;">Voltar para a loja</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a class="whats-float" id="whatsFloat" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.5 8.5 0 1 1-3.8-7.1L21 3l-1.2 3.9c.8 1.3 1.2 2.9 1.2 4.6Z"/><path d="M8 10c.5 2.5 2.5 4.5 5 5"/></svg>
+</a>
+
+<script src="/cart.js"></script>
+<script>
+  var FREE_SHIPPING_THRESHOLD = 300;
+
+  var CAT_ICONS = {
+    camisetas: '<path d="M8 4 4 7v3h3v10h10V10h3V7l-4-3-2 2h-2L8 4Z"/>',
+    moletons: '<path d="M8 3 5 6v3h3v12h8V9h3V6l-3-3-3 2-3-2Z"/>',
+    calcas: '<path d="M7 3h10l1 6-2 12H8L6 9 7 3Z"/><path d="M6 9h12"/>',
+    tenis: '<path d="M3 15c0-5 4-9 9-9s9 4 9 9"/><path d="M3 15h18v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2Z"/>',
+    acessorios: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.4"/>',
+    kits: '<path d="M3 9 12 4l9 5-9 5-9-5Z"/><path d="M3 9v7l9 5 9-5V9"/><path d="M12 14v7"/>'
+  };
+  function catIcon(category){
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">' + (CAT_ICONS[category] || CAT_ICONS.camisetas) + '</svg>';
+  }
+
+  function money(n){ return 'R$ ' + Number(n).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+  function render(){
+    var cart = window.F7Cart.getCart();
+    var emptyState = document.getElementById('emptyState');
+    var layout = document.getElementById('cartLayout');
+
+    if (!cart.length) {
+      emptyState.classList.remove('hidden');
+      layout.classList.add('hidden');
+      return;
+    }
+    emptyState.classList.add('hidden');
+    layout.classList.remove('hidden');
+
+    document.getElementById('linesList').innerHTML = cart.map(function(l){
+      var media = l.image ? '<img src="' + l.image + '" alt="">' : catIcon(l.category);
+      var meta = l.size ? ('Tamanho: ' + l.size) : '';
+      return '' +
+        '<div class="cart-line" data-id="' + l.productId + '" data-size="' + (l.size || '') + '">' +
+          '<div class="line-media">' + media + '</div>' +
+          '<div>' +
+            '<div class="line-name">' + l.name + '</div>' +
+            '<div class="line-meta">' + meta + (meta ? ' · ' : '') + money(l.price) + ' /un</div>' +
+            '<div class="line-controls">' +
+              '<div class="qty-stepper">' +
+                '<button type="button" data-action="dec">−</button>' +
+                '<span>' + l.qty + '</span>' +
+                '<button type="button" data-action="inc">+</button>' +
+              '</div>' +
+              '<button type="button" class="line-remove" data-action="remove">Remover</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="line-total">' + money(l.qty * l.price) + '</div>' +
+        '</div>';
+    }).join('');
+
+    var subtotal = window.F7Cart.cartSubtotal();
+    document.getElementById('sumSubtotal').textContent = money(subtotal);
+    document.getElementById('sumTotal').textContent = money(subtotal);
+
+    var pct = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
+    var shipFill = document.getElementById('shipFill');
+    var shipNote = document.getElementById('shipNote');
+    shipFill.style.width = pct + '%';
+    if (subtotal >= FREE_SHIPPING_THRESHOLD) {
+      shipNote.textContent = 'Frete grátis aplicado ✓';
+      shipNote.className = 'ship-note ok';
+    } else {
+      shipNote.textContent = 'Faltam ' + money(FREE_SHIPPING_THRESHOLD - subtotal) + ' para frete grátis';
+      shipNote.className = 'ship-note';
+    }
+  }
+
+  document.addEventListener('click', function(e){
+    var line = e.target.closest('.cart-line');
+    if (!line) return;
+    var id = line.dataset.id, size = line.dataset.size;
+    var action = e.target.dataset.action;
+    if (!action) return;
+    var current = window.F7Cart.getCart().find(function(l){ return l.productId === id && (l.size||'') === size; });
+    if (!current) return;
+    if (action === 'inc') window.F7Cart.setLineQty(id, size, current.qty + 1);
+    if (action === 'dec') {
+      if (current.qty <= 1) { window.F7Cart.removeLine(id, size); }
+      else { window.F7Cart.setLineQty(id, size, current.qty - 1); }
+    }
+    if (action === 'remove') window.F7Cart.removeLine(id, size);
+    render();
+  });
+
+  document.getElementById('checkoutForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var msg = document.getElementById('checkoutMsg');
+    var btn = document.getElementById('submitBtn');
+    var cart = window.F7Cart.getCart();
+    if (!cart.length) { msg.textContent = 'Sua sacola está vazia.'; msg.className = 'checkout-msg err'; return; }
+
+    var payload = {
+      items: cart.map(function(l){ return { productId: l.productId, size: l.size, qty: l.qty }; }),
+      customer: {
+        name: document.getElementById('c_name').value.trim(),
+        phone: document.getElementById('c_phone').value.trim(),
+        city: document.getElementById('c_city').value.trim(),
+        address: document.getElementById('c_address').value.trim(),
+        note: document.getElementById('c_note').value.trim()
+      }
+    };
+
+    btn.disabled = true;
+    msg.textContent = 'Enviando...';
+    msg.className = 'checkout-msg';
+
+    fetch('/api/orders', {
+      method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    }).then(function(r){ return r.json().then(function(d){ return {status:r.status, data:d}; }); })
+      .then(function(res){
+        if (res.status !== 201) throw new Error(res.data.error || 'Não foi possível enviar o pedido.');
+        var order = res.data;
+
+        var lines = order.items.map(function(it){
+          return '- ' + it.qty + 'x ' + it.name + (it.size ? ' (' + it.size + ')' : '') + ' — ' + money(it.price * it.qty);
+        }).join('\n');
+        var text = 'Olá! Quero confirmar meu pedido #' + order.id.slice(0,8) + ' na F7 Grifes:\n\n' +
+          lines + '\n\nTotal: ' + money(order.total) + '\n\n' +
+          'Nome: ' + order.customer.name + '\n' +
+          'Telefone: ' + order.customer.phone +
+          (order.customer.city ? ('\nCidade: ' + order.customer.city) : '') +
+          (order.customer.address ? ('\nEndereço: ' + order.customer.address) : '') +
+          (order.customer.note ? ('\nObs: ' + order.customer.note) : '');
+
+        document.getElementById('whatsBtn').href = window.F7_WHATSAPP_LINK(text);
+        document.getElementById('orderIdLabel').textContent = 'Pedido #' + order.id.slice(0,8);
+        document.getElementById('checkoutForm').classList.add('hidden');
+        document.getElementById('successPanel').classList.remove('hidden');
+        window.F7Cart.clearCart();
+      })
+      .catch(function(err){
+        msg.textContent = err.message;
+        msg.className = 'checkout-msg err';
+        btn.disabled = false;
+      });
+  });
+
+  render();
+  document.getElementById('whatsFloat').href = window.F7_WHATSAPP_LINK('Olá! Vim do site da F7 Grifes.');
+</script>
+</body>
+</html>
