@@ -228,7 +228,7 @@
   function api(path, opts){
     opts = opts || {};
     opts.headers = Object.assign({}, opts.headers, { 'x-admin-token': getToken() });
-    return fetch(path, opts).then(function(r){
+    return fetch('https://f7-grifes.onrender.com' + path, opts).then(function(r) {
       if (r.status === 401) {
         clearToken();
         showLogin('Sessão expirada. Entre novamente.');
