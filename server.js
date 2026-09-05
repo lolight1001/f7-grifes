@@ -19,7 +19,7 @@ const PUBLIC_DIR = path.join(ROOT, 'public');
 const UPLOADS_DIR = path.join(PUBLIC_DIR, 'uploads');
 
 function loadConfig() {
-  const defaults = { host: '127.0.0.1', port: 3000, adminPassword: 'mudaressasenha123' };
+ const defaults = { host: '0.0.0.0', port: process.env.PORT || 10000, adminPassword: 'mudarestasenha125' };
   let parsed = {};
   try {
     parsed = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
